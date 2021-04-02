@@ -9,12 +9,12 @@ socketio = SocketIO(app)
 
 riders = []
 drivers = []
-count = 0
 
 @app.route('/driver', methods=['POST'])
 def driver():
     data = request.json
-    print(data)
+    drivers.append(data)
+    print('received driver data')
     return data
 
 @app.route('/rider', methods=['POST'])
@@ -22,8 +22,7 @@ def rider():
     global count
     data = request.json
     riders.append(data)
-    count+=1
-    print(riders[count-1])
+    print('receive rider data')
     return data
 
 @app.route('/')
