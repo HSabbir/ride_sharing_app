@@ -4,7 +4,7 @@ import time
 import random
 
 sio = socketio.Client()
-sio.connect('http://localhost:8000',namespaces=['/notify'])
+sio.connect('http://localhost:8000', namespaces=['/notify'])
 
 
 
@@ -12,27 +12,31 @@ sio.connect('http://localhost:8000',namespaces=['/notify'])
 def message(data):
     print(data)
 
+
+id = 101
+
 while True:
     x1 = random.randrange(2000)
     y1 = random.randrange(2000)
     x2 = random.randrange(2000)
     y2 = random.randrange(2000)
 
-    rider_data = {'name': 'Alice',
+    rider_data = {'name': 'r'+ str(id), #rider id starts with r
             'location': [x1,y1],
-            'desti': [x2,y2]}
+            'destination': [x2,y2]}
     r = requests.post("http://localhost:8000/rider", json= rider_data)
 
     x3 = random.randrange(2000)
     y3 = random.randrange(2000)
     carnum = random.randrange(10000000)
 
-    driver_data = {'name': 'Alice',
+    driver_data = {'name': 'd'+str(id), #driver id starts with d
                   'car_number': carnum,
                   'location': [x3, y3]}
     r = requests.post("http://localhost:8000/driver", json=driver_data)
 
     time.sleep(1)
+    id += 1
 
 
 
