@@ -2,32 +2,15 @@ import requests
 import socketio
 import time
 import random
-import json
 
 sio = socketio.Client()
 sio.connect('http://localhost:8000',namespaces=['/notify'])
 
 
-def send_ratings():
-    ratings_data = random.randrange(1,5)
-    rating = {
-        'rating':ratings_data
-    }
-    r = requests.post("http://localhost:8000/rating", json=json.dumps(rating))
-
 
 @sio.event(namespace='/notify')
 def message(data):
-    fare = round(data[2],2)
-    print(data[0]+ ' is assigned to '+data[1] + '.\n' + 'driver ' + data[1] +
-          ' received fare '+ str(fare) +' Taka\n')
-
-    sio.emit('message', data[2], namespace='/notify')
-    send_ratings()
-
-
-
-id = 101
+    print(data)
 
 while True:
     x1 = random.randrange(2000)
@@ -35,22 +18,21 @@ while True:
     x2 = random.randrange(2000)
     y2 = random.randrange(2000)
 
-    rider_data = {'name': 'r' + str(id),  # rider id starts with r
-                  'location': [x1, y1],
-                  'desti': [x2, y2]}
-    r = requests.post("http://localhost:8000/rider", json=json.dumps(rider_data))
+    rider_data = {'name': 'Alice',
+            'location': [x1,y1],
+            'desti': [x2,y2]}
+    r = requests.post("http://localhost:8000/rider", json= rider_data)
 
     x3 = random.randrange(2000)
     y3 = random.randrange(2000)
     carnum = random.randrange(10000000)
 
-    driver_data = {'name': 'd' + str(id),  # driver id starts with d
-                   'car_number': carnum,
-                   'location': [x3, y3]}
-    r = requests.post("http://localhost:8000/driver", json=json.dumps(driver_data))
+    driver_data = {'name': 'Alice',
+                  'car_number': carnum,
+                  'location': [x3, y3]}
+    r = requests.post("http://localhost:8000/driver", json=driver_data)
 
     time.sleep(1)
-    id += 1
 
 
 
