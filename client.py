@@ -5,7 +5,7 @@ import random
 import json
 
 sio = socketio.Client()
-sio.connect('http://localhost:8000',namespaces=['/notify'])
+sio.connect('http://localhost:8000',namespaces=['/communication'])
 
 
 def send_ratings():
@@ -16,13 +16,13 @@ def send_ratings():
     r = requests.post("http://localhost:8000/rating", json=json.dumps(rating))
 
 
-@sio.event(namespace='/notify')
+@sio.event(namespace='/communication')
 def message(data):
     fare = round(data[2],2)
-    print(data[0]+ ' is assigned to '+data[1] + '.\n' + 'driver ' + data[1] +
-          ' received fare '+ str(fare) +' Taka\n')
+    print(data[0]+ ' is assigned to '+data[1] + '.\n'  +
+          ' Total fare '+ str(fare) +' Taka\n')
 
-    sio.emit('message', data[2], namespace='/notify')
+    #sio.emit('message', data[2], namespace='/communication')
     send_ratings()
 
 
