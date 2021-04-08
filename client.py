@@ -8,9 +8,10 @@ sio = socketio.Client()
 sio.connect('http://localhost:8000',namespaces=['/communication'])
 
 
-def send_ratings():
+def send_ratings(dr_name):
     ratings_data = random.randrange(1,5)
     rating = {
+        'driver_name':dr_name,
         'rating':ratings_data
     }
     r = requests.post("http://localhost:8000/rating", json=json.dumps(rating))
@@ -23,7 +24,7 @@ def message(data):
           ' Total fare '+ str(fare) +' Taka\n')
 
     #sio.emit('message', data[2], namespace='/communication')
-    send_ratings()
+    send_ratings(data[1])
 
 
 

@@ -12,11 +12,11 @@ socketio = SocketIO(app)
 riders = []
 drivers = []
 
-def insertVaribleIntoTable(rating):
+def insertVaribleIntoTable(driver_name,rating):
     conn = sqlite3.connect('./ratings.db')
     cursor = conn.cursor()
-    cursor.execute('''INSERT INTO ratings(rating) VALUES
-       (?)''',str(rating))
+    cursor.execute('''INSERT INTO ratings(driver_name,rating) VALUES
+       (?,?)''',(driver_name,rating))
 
     conn.commit()
     print("Records inserted........")
@@ -42,8 +42,9 @@ def rider():
 def ratings():
     data = request.json
     x = json.loads(data)
-    rat = int(x['rating'])
-    insertVaribleIntoTable(rat)
+    dr_name = x['driver_name']
+    rat = x['rating']
+    insertVaribleIntoTable(dr_name,rat)
     return data
 
 
