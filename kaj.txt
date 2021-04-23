@@ -1,4 +1,0 @@
-socket // bad
-schedule(matching driver rider) // matching
-api expose(rider,driver) // done
-rating(database save) // bad
