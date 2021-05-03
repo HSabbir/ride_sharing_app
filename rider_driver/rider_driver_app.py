@@ -25,7 +25,7 @@ def rider():
     print('recived')
     riders.append(x)
     return data
-
+    
 
 
 def match_rider_driver():
@@ -54,7 +54,7 @@ def match_rider_driver():
             'driverName': d_name,
             'fare': fare
         }
-        r = requests.post("http://localhost:9002/api/clientMessage", json=json.dumps(messageClient))
+        r = requests.post("http://communication:8080/api/clientMessage", json=json.dumps(messageClient))
 
         drivers.remove(driverr)
         riders.remove(rider)
@@ -63,5 +63,5 @@ def match_rider_driver():
 if __name__ == '__main__':
     scheduler.add_job(id='Schedule task', func=match_rider_driver, trigger = 'interval', seconds = 5)
     scheduler.start()
-    app.run(port=9003)
+    app.run(host="0.0.0.0",port=8080)
 
