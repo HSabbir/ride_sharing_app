@@ -22,4 +22,4 @@ def driver():
 
 
 if __name__ == '__main__':
-    socketio.run(app,port=9002)
+    socketio.run(app,host="0.0.0.0",port=8080)

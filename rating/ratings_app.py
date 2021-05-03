@@ -5,7 +5,7 @@ import json
 app = Flask(__name__)
 app.config['MONGODB_SETTINGS'] = {
     'db': 'ratings',
-    'host': 'localhost',
+    'host': 'mongodb',
     'port': 27017
 }
 db = MongoEngine()
@@ -26,7 +26,8 @@ def ratings():
     rat = Rating(driver_name=x['driver_name'],
                 rating=str(x['rating']))
     rat.save()
+    print('doneeeee')
     return data
 
 if __name__ == '__main__':
-    app.run(port=9001)
+    app.run(host="0.0.0.0",port=8080)

@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  rating:
+    build: ./rating/
+    restart: always
+    depends_on:
+      - mongodb
+
+  communication:
+    build: ./communication/
+    ports:
+      - 8080:8080
+    restart: always
+
+  rider_driver:
+    build: ./rider_driver/
+    restart: always
+    depends_on:
+      - communication
+
+  nginx:
+    build: ./nginx/
+    ports:
+      - 10000:80
+    depends_on:
+      - rating
+      - rider_driver
+
+  mongodb:
+    image: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb_data_container:/data/db
+
+volumes:
+  mongodb_data_container:
+
