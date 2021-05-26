@@ -4,9 +4,8 @@ import time
 import random
 import json
 
-
 sio = socketio.Client()
-sio.connect('http://communication.dhaka.com:8080',namespaces=['/communication'])
+sio.connect('http://communication.chittagong.com:8080',namespaces=['/communication'])
 
 
 def send_ratings(dr_name):
@@ -15,7 +14,7 @@ def send_ratings(dr_name):
         'driver_name':dr_name,
         'rating':ratings_data
     }
-    r = requests.post("http://dhaka.server.com:80/api/rating", json=json.dumps(rating))
+    r = requests.post("http://chittagong.server.com:80/api/rating", json=json.dumps(rating))
 
 
 
@@ -41,7 +40,7 @@ while True:
     rider_data = {'name': 'r' + str(id),  # rider id starts with r
                   'location': [x1, y1],
                   'desti': [x2, y2]}
-    r = requests.post("http://dhaka.server.com:80/api/rider", json=json.dumps(rider_data))
+    r = requests.post("http://chittagong.server.com:80/api/rider", json=json.dumps(rider_data))
 
     x3 = random.randrange(2000)
     y3 = random.randrange(2000)
@@ -50,7 +49,7 @@ while True:
     driver_data = {'name': 'd' + str(id),  # driver id starts with d
                    'car_number': carnum,
                    'location': [x3, y3]}
-    r = requests.post("http://dhaka.server.com/api/driver", json=json.dumps(driver_data))
+    r = requests.post("http://chittagong.server.com:80/api/driver", json=json.dumps(driver_data))
 
     time.sleep(1)
     id += 1

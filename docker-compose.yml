@@ -1,31 +1,82 @@
 version: '3'
 
+networks: 
+  mynet:
+    ipam: 
+      config: 
+        - subnet: 10.10.0.0/24
+
 services:
   rating:
     build: ./rating/
     restart: always
     depends_on:
       - mongodb
+    networks: 
+      mynet:
+        ipv4_address: 10.10.0.6
 
-  communication:
+  communication-service-dhaka:
     build: ./communication/
-    ports:
-      - 8080:8080
     restart: always
+    networks: 
+      mynet:
+        ipv4_address: 10.10.0.11
 
-  rider_driver:
+  communication-service-chittagong:
+    build: ./communication/
+    restart: always
+    networks: 
+      mynet:
+        ipv4_address: 10.10.0.21
+
+  rider-sharing-dhaka:
     build: ./rider_driver/
     restart: always
     depends_on:
-      - communication
+      - communication-service-dhaka
+    environment: 
+      - LOCATION=dhaka
+    networks: 
+        mynet:
+          ipv4_address: 10.10.0.12
 
-  nginx:
+  rider-sharing-chittagong:
+      build: ./rider_driver/
+      restart: always
+      depends_on:
+        - communication-service-chittagong
+      environment: 
+        - LOCATION=chittagong
+      networks: 
+        mynet:
+          ipv4_address: 10.10.0.22
+  nginx-chittagong:
     build: ./nginx/
-    ports:
-      - 10000:80
     depends_on:
       - rating
-      - rider_driver
+      - rider-sharing-chittagong
+    environment: 
+      - API_V1=rider-sharing-chittagong
+      - API_V2=rating
+    command: /bin/sh -c "envsubst < /etc/nginx/conf.d/nginx.conf.template > /etc/nginx/conf.d/nginx.conf && nginx -g 'daemon off;'" 
+    networks:
+      mynet:
+        ipv4_address: 10.10.0.30
+
+  nginx-dhaka:
+    build: ./nginx/
+    depends_on:
+      - rating
+      - rider-sharing-dhaka
+    environment: 
+      - API_V1=rider-sharing-dhaka
+      - API_V2=rating
+    command: /bin/sh -c "envsubst < /etc/nginx/conf.d/nginx.conf.template > /etc/nginx/conf.d/nginx.conf && nginx -g 'daemon off;'" 
+    networks:
+      mynet:
+        ipv4_address: 10.10.0.10
+
 
   mongodb:
     image: mongo
@@ -33,6 +84,9 @@ services:
       - 27017:27017
     volumes:
       - mongodb_data_container:/data/db
+    networks:
+      mynet:
+        ipv4_address: 10.10.0.5
 
 volumes:
   mongodb_data_container:

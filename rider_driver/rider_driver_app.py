@@ -2,6 +2,9 @@ import requests
 from flask import Flask,request
 from flask_apscheduler import APScheduler
 import json
+import os
+
+location = os.environ.get('LOCATION')
 
 app = Flask(__name__)
 scheduler = APScheduler()
@@ -54,7 +57,8 @@ def match_rider_driver():
             'driverName': d_name,
             'fare': fare
         }
-        r = requests.post("http://communication:8080/api/clientMessage", json=json.dumps(messageClient))
+        url = "http://communication."+location+".com:8080/api/clientMessage"
+        r = requests.post(f"{url}", json=json.dumps(messageClient))
 
         drivers.remove(driverr)
         riders.remove(rider)
